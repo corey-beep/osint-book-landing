@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SuccessPage() {
-  const searchParams = useSearchParams();
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = () => {
@@ -60,7 +59,7 @@ export default function SuccessPage() {
           {/* Download Section */}
           <div className="bg-white/5 rounded-lg p-6 mb-8">
             <p className="text-white mb-4">
-              Your download should start automatically. If it doesn't, click the button below:
+              Your download should start automatically. If it doesn&apos;t, click the button below:
             </p>
             <button
               onClick={handleDownload}
@@ -83,12 +82,12 @@ export default function SuccessPage() {
 
           {/* Back to Home */}
           <div className="mt-8">
-            <a
+            <Link
               href="/"
               className="text-blue-400 hover:text-blue-300 underline"
             >
               Return to Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>
