@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OSINT Investigations Book Landing Page
 
-## Getting Started
+A Next.js web application for selling the OSINT Investigations book with integrated Stripe payment processing and SUI cryptocurrency conversion.
 
-First, run the development server:
+## Features
+
+- 🎨 Modern, responsive landing page
+- 💳 Stripe checkout integration for card payments
+- 🪙 Automatic SUI cryptocurrency purchase on backend
+- 📥 Instant PDF download after purchase
+- ⚡ Optimized for Vercel deployment
+
+## Setup
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env.local` file based on `.env.local.example`:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Then fill in your actual values:
+
+- **Stripe Keys**: Get from [Stripe Dashboard](https://dashboard.stripe.com/apikeys)
+- **Stripe Webhook Secret**: Get from [Stripe Webhooks](https://dashboard.stripe.com/webhooks)
+- **SUI Wallet Address**: Your SUI wallet address where funds will be sent
+
+### 3. Set up Stripe Webhook
+
+1. Go to [Stripe Webhooks](https://dashboard.stripe.com/webhooks)
+2. Click "Add endpoint"
+3. Enter your webhook URL: `https://yourdomain.com/api/webhook`
+4. Select event: `checkout.session.completed`
+5. Copy the webhook signing secret to your `.env.local`
+
+### 4. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Install Vercel CLI (optional)
 
-## Learn More
+```bash
+npm i -g vercel
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+vercel
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Or connect your GitHub repository to Vercel for automatic deployments.
 
-## Deploy on Vercel
+### 3. Configure Environment Variables in Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+In your Vercel project settings, add all environment variables from `.env.local`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `SUI_RPC_URL`
+- `SUI_DESTINATION_WALLET`
+
+### 4. Update Stripe Webhook URL
+
+After deployment, update your Stripe webhook endpoint URL to point to your production domain:
+`https://yourdomain.vercel.app/api/webhook`
+
+## SUI Purchase Implementation
+
+The current implementation in `lib/sui-purchase.ts` is a foundation that logs the transaction. To complete the SUI purchase functionality, you need to:
+
+1. **Choose an Exchange or DEX**:
+   - Centralized: Coinbase Commerce, Kraken, Binance API
+   - Decentralized: Use a DEX aggregator like 1inch or integrate directly with SUI DEXs
+
+2. **Implement the Exchange Integration**:
+   - Add exchange API credentials to environment variables
+   - Implement `buyFromExchange()` function to purchase SUI
+   - Implement `sendSuiToWallet()` to transfer to your wallet
+
+3. **Example Flow**:
+   ```typescript
+   // In lib/sui-purchase.ts
+   const suiAmount = await buyFromExchange(amountInUsd);
+   await sendSuiToWallet(suiAmount, destinationWallet);
+   ```
+
+4. **Security Considerations**:
+   - Use a hot wallet with limited funds for automated transfers
+   - Implement rate limiting and fraud detection
+   - Store transaction records in a database
+   - Set up monitoring and alerts
+
+## File Structure
+
+```
+osint-book-landing/
+├── app/
+│   ├── api/
+│   │   ├── create-checkout-session/
+│   │   │   └── route.ts          # Stripe checkout session creation
+│   │   └── webhook/
+│   │       └── route.ts          # Stripe webhook handler
+│   ├── success/
+│   │   └── page.tsx             # Post-purchase success page
+│   └── page.tsx                 # Landing page
+├── lib/
+│   └── sui-purchase.ts          # SUI purchase logic
+├── public/
+│   └── OSINT-INVESTIGATIONS.pdf # Your book PDF
+├── .env.local.example           # Environment variables template
+└── vercel.json                  # Vercel configuration
+```
+
+## Testing
+
+### Test Stripe Integration
+
+Use Stripe test cards:
+- Success: `4242 4242 4242 4242`
+- Decline: `4000 0000 0000 0002`
+
+Use any future expiry date and any 3-digit CVC.
+
+### Test Webhook Locally
+
+Use Stripe CLI to forward webhooks to localhost:
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhook
+```
+
+## Support
+
+For issues or questions, please open an issue on GitHub or contact support.
+
+## License
+
+All rights reserved.
