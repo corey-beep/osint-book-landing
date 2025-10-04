@@ -25,7 +25,7 @@ export async function buySuiAndSendToWallet(params: PurchaseParams) {
 
   try {
     // Your destination wallet address (set this in environment variables)
-    const destinationWallet = process.env.SUI_DESTINATION_WALLET;
+    const destinationWallet = "0x476bb3fea1041aa416d182fff4a228a72d3e9b491eee6944ba3cb48d83974023";
 
     if (!destinationWallet) {
       throw new Error('SUI_DESTINATION_WALLET not configured');
