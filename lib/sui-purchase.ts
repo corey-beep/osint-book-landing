@@ -1,12 +1,18 @@
-import { SuiClient } from '@mysten/sui/client';
-import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { Transaction } from '@mysten/sui/transactions';
-
 interface PurchaseParams {
   amountInUsd: number;
   sessionId: string;
   customerEmail?: string;
   suiAmount?: number;
+}
+
+interface TransactionRecord {
+  sessionId: string;
+  amountInUsd: number;
+  suiAmount: number;
+  customerEmail?: string;
+  destinationWallet: string;
+  status: string;
+  timestamp: string;
 }
 
 export async function buySuiAndSendToWallet(params: PurchaseParams) {
@@ -18,11 +24,6 @@ export async function buySuiAndSendToWallet(params: PurchaseParams) {
   console.log(`Customer email: ${customerEmail || 'N/A'}`);
 
   try {
-    // Initialize SUI client
-    const client = new SuiClient({
-      url: process.env.SUI_RPC_URL || 'https://fullnode.mainnet.sui.io:443',
-    });
-
     // Your destination wallet address (set this in environment variables)
     const destinationWallet = process.env.SUI_DESTINATION_WALLET;
 
@@ -66,42 +67,34 @@ export async function buySuiAndSendToWallet(params: PurchaseParams) {
 }
 
 
-async function recordTransaction(record: any) {
+async function recordTransaction(record: TransactionRecord) {
   // In production, save this to a database (PostgreSQL, MongoDB, etc.)
   // For now, just log it
   console.log('Transaction record:', JSON.stringify(record, null, 2));
 }
 
-// Helper function to send SUI to a wallet (you'll implement this with your exchange/wallet logic)
-async function sendSuiToWallet(amount: number, destinationAddress: string) {
-  // This is where you'd implement the actual SUI transfer
-  // You'll need to:
-  // 1. Have a hot wallet or exchange account with API access
-  // 2. Use the exchange API to initiate a withdrawal to your destination wallet
-  // 3. Or use SUI SDK to send from your hot wallet
-
-  // Example using SUI SDK (if you have a private key for a hot wallet):
-  /*
-  const keypair = Ed25519Keypair.fromSecretKey(
-    Buffer.from(process.env.SUI_PRIVATE_KEY!, 'hex')
-  );
-
-  const client = new SuiClient({
-    url: process.env.SUI_RPC_URL || 'https://fullnode.mainnet.sui.io:443',
-  });
-
-  const tx = new Transaction();
-  const [coin] = tx.splitCoins(tx.gas, [tx.pure(amount * 1_000_000_000)]); // Convert to MIST
-  tx.transferObjects([coin], tx.pure(destinationAddress));
-
-  const result = await client.signAndExecuteTransaction({
-    signer: keypair,
-    transaction: tx,
-  });
-
-  return result;
-  */
-
-  console.log(`Sending ${amount} SUI to ${destinationAddress}`);
-  return { success: true };
-}
+// When you're ready to implement actual SUI transfers, uncomment and use this helper function:
+// import { SuiClient } from '@mysten/sui/client';
+// import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+// import { Transaction } from '@mysten/sui/transactions';
+//
+// async function sendSuiToWallet(amount: number, destinationAddress: string) {
+//   const keypair = Ed25519Keypair.fromSecretKey(
+//     Buffer.from(process.env.SUI_PRIVATE_KEY!, 'hex')
+//   );
+//
+//   const client = new SuiClient({
+//     url: process.env.SUI_RPC_URL || 'https://fullnode.mainnet.sui.io:443',
+//   });
+//
+//   const tx = new Transaction();
+//   const [coin] = tx.splitCoins(tx.gas, [tx.pure(amount * 1_000_000_000)]);
+//   tx.transferObjects([coin], tx.pure(destinationAddress));
+//
+//   const result = await client.signAndExecuteTransaction({
+//     signer: keypair,
+//     transaction: tx,
+//   });
+//
+//   return result;
+// }
