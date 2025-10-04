@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import type { Stripe as StripeJs } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -44,14 +45,14 @@ export default function Home() {
       });
 
       const { sessionId } = await response.json();
-      const stripe = await stripePromise;
+      const stripe: StripeJs | null = await stripePromise;
 
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) {
-          console.error('Stripe redirect error:', error);
-          alert('Something went wrong. Please try again.');
-        }
+      if (!stripe) throw new Error('Stripe.js failed to load');
+
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      if (error) {
+        console.error(error);
+        alert('Something went wrong. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
