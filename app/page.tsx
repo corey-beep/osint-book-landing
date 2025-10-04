@@ -75,11 +75,11 @@ export default function Home() {
             {/* Book Preview */}
             <div className="relative">
               <div className="bg-white p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-transform">
-                <div className="aspect-[3/4] relative rounded overflow-hidden">
+                <div className="relative rounded overflow-hidden">
                   <img
                     src="/book-cover.png"
                     alt="OSINT Investigations Book Cover"
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto"
                   />
                 </div>
               </div>
