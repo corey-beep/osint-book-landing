@@ -44,10 +44,15 @@ export default function Home() {
       });
 
       const { sessionId } = await response.json();
-      const stripe = await stripePromise;
 
+      // Redirect to Stripe Checkout
+      const stripe = await stripePromise;
       if (stripe) {
-        await stripe.redirectToCheckout({ sessionId });
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) {
+          console.error('Stripe redirect error:', error);
+          alert('Something went wrong. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error:', error);
