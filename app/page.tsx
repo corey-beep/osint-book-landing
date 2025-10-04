@@ -57,7 +57,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
@@ -65,7 +65,7 @@ export default function Home() {
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
               OSINT Investigations
             </h1>
-            <p className="text-xl text-blue-200">
+            <p className="text-xl text-gray-300">
               Master the Art of Open Source Intelligence
             </p>
           </div>
@@ -74,19 +74,17 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Book Preview */}
             <div className="relative">
-              <div className="bg-white p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-transform">
-                <div className="relative rounded overflow-hidden">
-                  <img
-                    src="/book-cover.png"
-                    alt="OSINT Investigations Book Cover"
-                    className="w-full h-auto"
-                  />
-                </div>
+              <div className="rounded-lg shadow-2xl transform hover:scale-105 transition-transform overflow-hidden">
+                <img
+                  src="/book-cover.png"
+                  alt="OSINT Investigations Book Cover"
+                  className="w-full h-auto"
+                />
               </div>
             </div>
 
             {/* Purchase Section */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-lg p-8 border border-white/20">
+            <div className="bg-gray-800/50 backdrop-blur-lg rounded-lg p-8 border border-gray-700">
               <h2 className="text-3xl font-bold text-white mb-6">
                 Get Your Copy Today
               </h2>
@@ -99,17 +97,17 @@ export default function Home() {
                     <div className="text-4xl font-bold text-white mb-2">
                       ${priceData.totalPriceUsd.toFixed(2)}
                     </div>
-                    <div className="text-blue-200">
+                    <div className="text-gray-300">
                       3 SUI ≈ ${priceData.totalPriceUsd.toFixed(2)} USD
                     </div>
-                    <div className="text-sm text-blue-300 mt-1">
+                    <div className="text-sm text-gray-400 mt-1">
                       1 SUI = ${priceData.suiPriceUsd.toFixed(2)} • Updates every 60s
                     </div>
                   </>
                 ) : (
                   <div className="text-4xl font-bold text-white mb-2">Price unavailable</div>
                 )}
-                <div className="text-blue-200 mt-2">Digital PDF Edition</div>
+                <div className="text-gray-300 mt-2">Digital PDF Edition</div>
               </div>
 
               <ul className="space-y-4 mb-8 text-white">
@@ -142,19 +140,19 @@ export default function Home() {
               <button
                 onClick={handlePurchase}
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                className="w-full bg-white hover:bg-gray-100 text-black font-bold py-4 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg"
               >
                 {loading ? 'Processing...' : 'Purchase Now'}
               </button>
 
-              <p className="text-sm text-blue-200 mt-4 text-center">
+              <p className="text-sm text-gray-400 mt-4 text-center">
                 Secure payment powered by Stripe
               </p>
             </div>
           </div>
 
           {/* Footer Note */}
-          <div className="mt-16 text-center text-blue-200 text-sm">
+          <div className="mt-16 text-center text-gray-400 text-sm">
             <p>© 2024 OSINT Investigations. All rights reserved.</p>
           </div>
         </div>
