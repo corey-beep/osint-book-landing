@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import type { Stripe as StripeJs } from '@stripe/stripe-js';
+import { loadStripe, type Stripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -45,7 +44,7 @@ export default function Home() {
       });
 
       const { sessionId } = await response.json();
-      const stripe: StripeJs | null = await stripePromise;
+      const stripe: Stripe | null = await stripePromise;
 
       if (!stripe) throw new Error('Stripe.js failed to load');
 
