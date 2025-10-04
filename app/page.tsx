@@ -75,14 +75,12 @@ export default function Home() {
             {/* Book Preview */}
             <div className="relative">
               <div className="bg-white p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-transform">
-                <div className="aspect-[3/4] bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
-                  <div className="text-center text-white p-8">
-                    <h2 className="text-3xl font-bold mb-4">OSINT</h2>
-                    <h3 className="text-2xl font-semibold">INVESTIGATIONS</h3>
-                    <div className="mt-8 text-sm opacity-80">
-                      Your Complete Guide to Open Source Intelligence
-                    </div>
-                  </div>
+                <div className="aspect-[3/4] relative rounded overflow-hidden">
+                  <img
+                    src="/book-cover.png"
+                    alt="OSINT Investigations Book Cover"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
