@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { loadStripe, type Stripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import type { Stripe as StripeJs } from '@stripe/stripe-js'; // alias to avoid name collision
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -37,22 +38,21 @@ export default function Home() {
   };
 
   const handlePurchase = async () => {
-    setLoading(true);
     try {
-      const response = await fetch('/api/create-checkout-session', {
+      setLoading(true);
+
+      const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { sessionId } = (await res.json()) as { sessionId: string };
 
-      const { sessionId } = await response.json();
-      const stripe: Stripe | null = await stripePromise;
-
+      const stripe: StripeJs | null = await stripePromise; // NOTE: StripeJs type
       if (!stripe) throw new Error('Stripe.js failed to load');
 
       const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        console.error(error);
-        alert('Something went wrong. Please try again.');
-      }
+      if (error) console.error(error);
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
