@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface SuiPriceData {
   suiAmount: number;
@@ -40,15 +43,20 @@ export default function Home() {
         method: 'POST',
       });
 
-      const { url } = await response.json();
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise;
 
-      // Redirect to Stripe Checkout
-      if (url) {
-        window.location.href = url;
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) {
+          console.error('Stripe redirect error:', error);
+          alert('Something went wrong. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
