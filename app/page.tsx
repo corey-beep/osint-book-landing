@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import type { Stripe as StripeJs } from '@stripe/stripe-js'; // alias to avoid name collision
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -48,7 +47,7 @@ export default function Home() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { sessionId } = (await res.json()) as { sessionId: string };
 
-      const stripe: StripeJs | null = await stripePromise; // NOTE: StripeJs type
+      const stripe = await stripePromise; // let @stripe/stripe-js typing flow through
       if (!stripe) throw new Error('Stripe.js failed to load');
 
       const { error } = await stripe.redirectToCheckout({ sessionId });
